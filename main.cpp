@@ -9,15 +9,27 @@
 #include <cstdlib>
 #include "Driver.h"
 
+#include <iomanip>
+
+enum {
+    DRIVER_NUMBER = 0,
+    DRIVER_NAME,
+    LAP_NUMBER,
+    LAP_PITTED,
+    LAP_TIME
+};
+
 void ReadPdf (const char* pdfFile)
 {
   using namespace PoDoFo;
-  int lapNo = 0;
+  int LapNo = 0;
+  int state = DRIVER_NUMBER;
 
   PdfMemDocument pdf (pdfFile);
+  std::cout << "{" << std::endl;
+  std::cout << "  \"drivers\": [";
   for (int pn = 0; pn < pdf.GetPageCount (); ++pn)
   {
-    std::cout << "Page " << pn + 1 << std::endl;
     PdfPage* page = pdf.GetPage(pn);
     
     PdfContentsTokenizer tok (page);
@@ -29,26 +41,99 @@ void ReadPdf (const char* pdfFile)
       switch (type)
       {
         case ePdfContentsType_Keyword:
+        {
           // process token: it contains the current command
           // pop from var stack as necessary
 //          std::cout << "<" << token << "> ";
           break;
+        }
         case ePdfContentsType_Variant:
+        {
           // process var: push it onto a stack
           if (var.IsString ())
           {
-            std::string varStr (var.GetString ().GetString ());
-            int varInt = atoi (varStr.c_str());
-            std::cout << "[" << varInt << "] ";
+            const char* varStr = var.GetString ().GetString ();
+            switch (state)
+            {
+              case DRIVER_NUMBER:
+              {
+                int driverNumber = atoi (varStr);
+                if (driverNumber)
+                {
+                  std::cout << "\n    {";
+                  std::cout << "\n      \"driverNumber\" : " << driverNumber << ",\n";
+                  state = DRIVER_NAME;
+                }
+                break;
+              }
+              case (DRIVER_NAME):
+              {
+                std::cout << "      \"driverName\" : \"" << varStr << "\",\n";
+                std::cout << "      \"laps\" : [\n";
+                state = LAP_NUMBER;
+                break;
+              }
+              case (LAP_NUMBER):
+              {
+                int currentLapNo = atoi (varStr);
+                if (currentLapNo)
+                {
+                  if (currentLapNo == LapNo + 1)
+                  {
+                    if (currentLapNo > 1)
+                    {
+                      std::cout << "," << std::endl;
+                    }
+                    std::cout << "        { \"lapNo\" : " << currentLapNo << ", ";
+                    LapNo = currentLapNo;
+                    state = LAP_PITTED;
+                  }
+                  else
+                  { // This is a driver number
+                    std::cout << "\n      ]";
+                    std::cout << "\n    },";
+                    std::cout << "\n    {";
+                    std::cout << "\n      \"driverNumber\" : " << currentLapNo << ",\n";
+                    LapNo = 0;
+                    state = DRIVER_NAME;
+                  }
+                }
+                break;
+              }
+              case (LAP_PITTED):
+              {
+                std::cout << "\"pitted\" : \"" << varStr << "\", ";
+                state = LAP_TIME;
+                break;
+              }
+              case (LAP_TIME):
+              {
+                //16:15:00
+                //1:32.173
+                std::cout << "\"lapTime\" : \"" << varStr << "\" }";
+                state = LAP_NUMBER;
+                break;
+              }
+              default:
+              {
+                // Shouldn't get here!
+                break;
+              }
+            }
           }
           break;
+        }
         default:
+        {
           // should not happen!
           break;
+        }
       }
     }
-    std::cout << std::endl;
   }
+  std::cout << "\n    }"
+            << "\n  ]"
+            << "\n}" << std::endl;
 }
 
 /*
@@ -56,8 +141,13 @@ void ReadPdf (const char* pdfFile)
  */
 int main (int argc, char** argv)
 {
-  std::cout << "Hello Brian!" << std::endl;
-  const char *pdfFile = "../../../data/2018_01_aus_f1_r0_timing_racelapanalysis_v01.pdf";
+  if (argc != 2)
+  {
+    std::cout << "Hello Brian!" << std::endl;
+    return -1;
+  }
+  
+  const char *pdfFile = argv[1];
   try {
     ReadPdf (pdfFile);
   } catch (const PoDoFo::PdfError &eCode) {
