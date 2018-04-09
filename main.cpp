@@ -102,7 +102,7 @@ void ReadPdf (const char* pdfFile)
               }
               case (LAP_PITTED):
               {
-                std::cout << "\"pitted\" : \"" << varStr << "\", ";
+                std::cout << "\"lapNotes\" : \"" << varStr << "\", ";
                 state = LAP_TIME;
                 break;
               }
