@@ -23,13 +23,29 @@
  */
 int main (int argc, char** argv)
 {
+  const int NUM_DRIVERS = 20;
   Json::Value root;
+  int driversToCompare[NUM_DRIVERS];
+  bool compareIndividuals = false;
+  
+  if (argc < 2)
+  {
+    std::cout << "Usage: " << argv[0]
+      << " <json File> [driver number] [driver number] ..." << std::endl;
+    return 0;
+  }
+  else if (argc > 2)
+  {
+    compareIndividuals = true;
+    for (int i = 2; i < argc; i++)
+    {
+      driversToCompare[i - 2] = std::stoi (argv[i]);
+    }
+  }
   const char *jsonFile = argv[1];
   
   std::ifstream file (jsonFile);
   file >> root;
-  std::cout << root;
-  std::cout << "\nHello Brian!" << std::endl;
   
   Json::Value drivers = root["drivers"];
   int numDrivers = drivers.size ();
@@ -41,7 +57,6 @@ int main (int argc, char** argv)
     driver.number (drivers[i]["driverNumber"].asInt());
     driver.name (drivers[i]["driverName"].asString ());
     unsigned int laps = drivers[i]["laps"].size ();
-    std::cout << " laps: " << laps << " [ ";
     for (int j = 0; j < laps; j++)
     {
       Json::Value jsonLap = drivers[i]["laps"][j];
@@ -51,14 +66,28 @@ int main (int argc, char** argv)
       lap.laptime (jsonLap["lapTime"].asString ());
       driver.lap (lap);
     }
-    std::cout << "]" << std::endl;
     driverVector.push_back (driver);
   }
+  
+  // Now that we have the data, we can play.
+  
   for (std::vector<Driver>::iterator it = driverVector.begin (); it != driverVector.end (); ++it)
   {
-    std::cout << (*it).toString () << std::endl;
+    if (true == compareIndividuals)
+    {
+      for (int i = 0; i < NUM_DRIVERS; i++)
+      {
+        if ((*it).number () == driversToCompare[i])
+        {
+          std::cout << (*it).raceAnalysis () << std::endl;
+        }
+      }
+    }
+    else
+    {
+      std::cout << (*it).raceAnalysis () << std::endl;
+    }
   }
-  std::cout << Lap::timeStringToMs ("01:53.453") << std::endl;
   return 0;
 }
 

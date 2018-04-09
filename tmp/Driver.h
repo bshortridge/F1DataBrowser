@@ -27,6 +27,7 @@ public:
   Lap lap (unsigned int lapNumber);
   
   std::string toString ();
+  std::string raceAnalysis ();
 private:
   unsigned char     m_driverNumber;
   std::string       m_driverName;
