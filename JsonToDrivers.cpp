@@ -15,29 +15,14 @@
 
 #include "jsoncpp/json/json.h"
 
-
 #include "JsonToDrivers.h"
 
-JsonToDrivers::JsonToDrivers ()
-{
-}
-
-JsonToDrivers::JsonToDrivers (const JsonToDrivers& orig)
-{
-}
-
-JsonToDrivers::~JsonToDrivers ()
-{
-}
-
-std::vector<Driver> JsonToDrivers::convertToDriverObjects (const char* jsonFile)
+std::vector<Driver> JsonToDrivers::convertToDriverObjects (const std::string jsonFile)
 {
   Json::Value root;
   
   std::ifstream file (jsonFile);
   file >> root;
-  std::cout << root;
-  std::cout << "\nHello Brian!" << std::endl;
   
   Json::Value drivers = root["drivers"];
   int numDrivers = drivers.size ();
@@ -49,25 +34,18 @@ std::vector<Driver> JsonToDrivers::convertToDriverObjects (const char* jsonFile)
     driver.number (drivers[i]["driverNumber"].asInt());
     driver.name (drivers[i]["driverName"].asString());
     int laps = drivers[i]["laps"].size ();
-    std::cout << "laps (" << laps << ") [";
     for (int j = 0; j < laps; j++)
     {
       Json::Value jsonLap = drivers[i]["laps"][j];
       Lap lap;
       int lapnum = jsonLap["lapNo"].asInt ();
-      std:: cout << " " << lapnum;
       lap.number (lapnum);
       lap.notes (jsonLap["pitted"].asString ());
-      lap.lapTime (jsonLap["lapTime"].asString ());
+      lap.laptime (jsonLap["lapTime"].asString ());
       lap.toString ();
       driver.lap (lap);
     }
-    std::cout << " ]" << std::endl;
     driverVector.push_back (driver);
   }
   return driverVector;
-//  for (std::vector<Driver>::iterator it = driverVector.begin (); it != driverVector.end (); ++it)
-//  {
-//    std::cout << (*it).toString () << std::endl;
-//  }
 }

@@ -5,6 +5,10 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>Driver.h</itemPath>
+      <itemPath>JsonToDrivers.h</itemPath>
+      <itemPath>Lap.h</itemPath>
+      <itemPath>LaptimesToJson.h</itemPath>
+      <itemPath>gnuplot_i.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -14,6 +18,10 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>Driver.cpp</itemPath>
+      <itemPath>JsonToDrivers.cpp</itemPath>
+      <itemPath>Lap.cpp</itemPath>
+      <itemPath>LaptimesToJson.cpp</itemPath>
+      <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -26,7 +34,6 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile.mk</itemPath>
     </logicalFolder>
-    <itemPath>main.cpp</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile.mk</projectmakefile>
   <confs>
@@ -38,6 +45,7 @@
       </toolsSet>
       <compileType>
         <ccTool>
+          <standard>8</standard>
           <incDir>
             <pElem>/usr/include</pElem>
           </incDir>
@@ -45,12 +53,27 @@
         <linkerTool>
           <linkerLibItems>
             <linkerLibLibItem>podofo</linkerLibLibItem>
+            <linkerLibLibItem>jsoncpp</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
       <item path="Driver.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="JsonToDrivers.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="JsonToDrivers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Lap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="LaptimesToJson.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="LaptimesToJson.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="gnuplot_i.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -78,6 +101,20 @@
       <item path="Driver.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="JsonToDrivers.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="JsonToDrivers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Lap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="LaptimesToJson.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="LaptimesToJson.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="gnuplot_i.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -12,30 +12,20 @@
  */
 #include <podofo/podofo.h>
 #include <iostream>
+#include <fstream>
 
 #include "LaptimesToJson.h"
 
-LaptimesToJson::LaptimesToJson ()
-{
-}
-
-LaptimesToJson::LaptimesToJson (const LaptimesToJson& orig)
-{
-}
-
-LaptimesToJson::~LaptimesToJson ()
-{
-}
-
-void LaptimesToJson::convertPdfToJson (const char* pdfFile)
+std::string LaptimesToJson::convertPdfToJson (const std::string pdfFile)
 {
   using namespace PoDoFo;
   int LapNo = 0;
   int state = DRIVER_NUMBER;
+  std::ostringstream jsonSS;
 
-  PdfMemDocument pdf (pdfFile);
-  std::cout << "{" << std::endl;
-  std::cout << "  \"drivers\": [";
+  PdfMemDocument pdf (pdfFile.c_str ());
+  jsonSS << "{" << std::endl;
+  jsonSS << "  \"drivers\": [";
   for (int pn = 0; pn < pdf.GetPageCount (); ++pn)
   {
     PdfPage* page = pdf.GetPage(pn);
@@ -52,7 +42,7 @@ void LaptimesToJson::convertPdfToJson (const char* pdfFile)
         {
           // process token: it contains the current command
           // pop from var stack as necessary
-//          std::cout << "<" << token << "> ";
+//          jsonSS << "<" << token << "> ";
           break;
         }
         case ePdfContentsType_Variant:
@@ -68,16 +58,16 @@ void LaptimesToJson::convertPdfToJson (const char* pdfFile)
                 int driverNumber = atoi (varStr);
                 if (driverNumber)
                 {
-                  std::cout << "\n    {";
-                  std::cout << "\n      \"driverNumber\" : " << driverNumber << ",\n";
+                  jsonSS << "\n    {";
+                  jsonSS << "\n      \"driverNumber\" : " << driverNumber << ",\n";
                   state = DRIVER_NAME;
                 }
                 break;
               }
               case (DRIVER_NAME):
               {
-                std::cout << "      \"driverName\" : \"" << varStr << "\",\n";
-                std::cout << "      \"laps\" : [\n";
+                jsonSS << "      \"driverName\" : \"" << varStr << "\",\n";
+                jsonSS << "      \"laps\" : [\n";
                 state = LAP_NUMBER;
                 break;
               }
@@ -90,18 +80,18 @@ void LaptimesToJson::convertPdfToJson (const char* pdfFile)
                   {
                     if (currentLapNo > 1)
                     {
-                      std::cout << "," << std::endl;
+                      jsonSS << "," << std::endl;
                     }
-                    std::cout << "        { \"lapNo\" : " << currentLapNo << ", ";
+                    jsonSS << "        { \"lapNo\" : " << currentLapNo << ", ";
                     LapNo = currentLapNo;
                     state = LAP_PITTED;
                   }
-                  else
+                  else if (currentLapNo != 1 && currentLapNo != 90)
                   { // This is a driver number
-                    std::cout << "\n      ]";
-                    std::cout << "\n    },";
-                    std::cout << "\n    {";
-                    std::cout << "\n      \"driverNumber\" : " << currentLapNo << ",\n";
+                    jsonSS << "\n      ]";
+                    jsonSS << "\n    },";
+                    jsonSS << "\n    {";
+                    jsonSS << "\n      \"driverNumber\" : " << currentLapNo << ",\n";
                     LapNo = 0;
                     state = DRIVER_NAME;
                   }
@@ -110,7 +100,7 @@ void LaptimesToJson::convertPdfToJson (const char* pdfFile)
               }
               case (LAP_PITTED):
               {
-                std::cout << "\"pitted\" : \"" << varStr << "\", ";
+                jsonSS << "\"pitted\" : \"" << varStr << "\", ";
                 state = LAP_TIME;
                 break;
               }
@@ -118,7 +108,7 @@ void LaptimesToJson::convertPdfToJson (const char* pdfFile)
               {
                 //16:15:00
                 //1:32.173
-                std::cout << "\"lapTime\" : \"" << varStr << "\" }";
+                jsonSS << "\"lapTime\" : \"" << varStr << "\" }";
                 state = LAP_NUMBER;
                 break;
               }
@@ -139,7 +129,20 @@ void LaptimesToJson::convertPdfToJson (const char* pdfFile)
       }
     }
   }
-  std::cout << "\n    }"
-            << "\n  ]"
-            << "\n}" << std::endl;
+  jsonSS  << "\n      ]"
+          << "\n    }"
+          << "\n  ]"
+          << "\n}" << std::endl;
+  
+  std::string jsonFileName (pdfFile);
+  std::size_t pdfExtension = jsonFileName.find (".pdf");
+  if (std::string::npos != pdfExtension)
+  {
+    jsonFileName.replace (pdfExtension, std::string::npos, ".json");
+    std::ofstream outFile (jsonFileName);
+    outFile << jsonSS.str();
+    outFile.close();
+  }
+  
+  return jsonFileName;
 }

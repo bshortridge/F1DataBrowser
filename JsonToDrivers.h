@@ -18,11 +18,7 @@
 
 class JsonToDrivers {
 public:
-  JsonToDrivers();
-  JsonToDrivers(const JsonToDrivers& orig);
-  virtual ~JsonToDrivers();
-  
-  static std::vector<Driver> convertToDriverObjects (const char *jsonFile);
+  static std::vector<Driver> convertToDriverObjects (const std::string jsonFile);
 private:
 
 };

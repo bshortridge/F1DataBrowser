@@ -6,179 +6,134 @@
  */
 #include <iostream>
 #include <podofo/podofo.h>
-<<<<<<< HEAD
-=======
+
 #include <cstdlib>
 #include "Driver.h"
 
 #include <iomanip>
 
-enum {
-    DRIVER_NUMBER = 0,
-    DRIVER_NAME,
-    LAP_NUMBER,
-    LAP_PITTED,
-    LAP_TIME
-};
-
-void ReadPdf (const char* pdfFile)
-{
-  using namespace PoDoFo;
-  int LapNo = 0;
-  int state = DRIVER_NUMBER;
-
-  PdfMemDocument pdf (pdfFile);
-  std::cout << "{" << std::endl;
-  std::cout << "  \"drivers\": [";
-  for (int pn = 0; pn < pdf.GetPageCount (); ++pn)
-  {
-    PdfPage* page = pdf.GetPage(pn);
-    
-    PdfContentsTokenizer tok (page);
-    const char* token = NULL;
-    PdfVariant var;
-    EPdfContentsType type;
-    while (tok.ReadNext (type, token, var))
-    {
-      switch (type)
-      {
-        case ePdfContentsType_Keyword:
-        {
-          // process token: it contains the current command
-          // pop from var stack as necessary
-//          std::cout << "<" << token << "> ";
-          break;
-        }
-        case ePdfContentsType_Variant:
-        {
-          // process var: push it onto a stack
-          if (var.IsString ())
-          {
-            const char* varStr = var.GetString ().GetString ();
-            switch (state)
-            {
-              case DRIVER_NUMBER:
-              {
-                int driverNumber = atoi (varStr);
-                if (driverNumber)
-                {
-                  std::cout << "\n    {";
-                  std::cout << "\n      \"driverNumber\" : " << driverNumber << ",\n";
-                  state = DRIVER_NAME;
-                }
-                break;
-              }
-              case (DRIVER_NAME):
-              {
-                std::cout << "      \"driverName\" : \"" << varStr << "\",\n";
-                std::cout << "      \"laps\" : [\n";
-                state = LAP_NUMBER;
-                break;
-              }
-              case (LAP_NUMBER):
-              {
-                int currentLapNo = atoi (varStr);
-                if (currentLapNo)
-                {
-                  if (currentLapNo == LapNo + 1)
-                  {
-                    if (currentLapNo > 1)
-                    {
-                      std::cout << "," << std::endl;
-                    }
-                    std::cout << "        { \"lapNo\" : " << currentLapNo << ", ";
-                    LapNo = currentLapNo;
-                    state = LAP_PITTED;
-                  }
-                  else
-                  { // This is a driver number
-                    std::cout << "\n      ]";
-                    std::cout << "\n    },";
-                    std::cout << "\n    {";
-                    std::cout << "\n      \"driverNumber\" : " << currentLapNo << ",\n";
-                    LapNo = 0;
-                    state = DRIVER_NAME;
-                  }
-                }
-                break;
-              }
-              case (LAP_PITTED):
-              {
-                std::cout << "\"lapNotes\" : \"" << varStr << "\", ";
-                state = LAP_TIME;
-                break;
-              }
-              case (LAP_TIME):
-              {
-                //16:15:00
-                //1:32.173
-                std::cout << "\"lapTime\" : \"" << varStr << "\" }";
-                state = LAP_NUMBER;
-                break;
-              }
-              default:
-              {
-                // Shouldn't get here!
-                break;
-              }
-            }
-          }
-          break;
-        }
-        default:
-        {
-          // should not happen!
-          break;
-        }
-      }
-    }
-  }
-  std::cout << "\n    }"
-            << "\n  ]"
-            << "\n}" << std::endl;
-}
->>>>>>> 2c1517a22e76563223f75ad2efde25064de2933d
-
 #include "LaptimesToJson.h"
 #include "JsonToDrivers.h"
+#include "gnuplot_i.hpp"
+
+void wait_for_key ()
+{
+  std::cout << std::endl << "Press ENTER to continue..." << std::endl;
+
+  std::cin.clear();
+  std::cin.ignore(std::cin.rdbuf()->in_avail());
+  std::cin.get();
+  return;
+}
+
 /*
  * 
  */
 int main (int argc, char** argv)
 {
-  if (argc != 2)
+  const int NUM_DRIVERS = 20;
+  int driversToCompare[NUM_DRIVERS] = {0};
+  bool compareIndividuals = false;
+  
+  if (argc < 2)
   {
-    std::cout << "Hello Brian!" << std::endl;
-    return -1;
+    std::cout << "Usage:\t" << argv[0]
+      << " <pdf File> [driver number] [driver number] ..." << std::endl;
+    std::cout << "Or:\t" << argv[0]
+      << " <json File> [driver number] [driver number] ..." << std::endl;
+    
+    return 0;
+  }
+  else if (argc > 2)
+  {
+    compareIndividuals = true;
+    for (int i = 2; i < argc; i++)
+    {
+      driversToCompare[i - 2] = std::stoi (argv[i]);
+    }
   }
   
-  char *inputFile = argv[1];
-  if (strstr (inputFile, ".pdf"))
+  std::string inputFile (argv[1]);
+  if (inputFile.rfind (".pdf") != std::string::npos)
   {
     try {
-      LaptimesToJson::convertPdfToJson (inputFile);
+      inputFile = LaptimesToJson::convertPdfToJson (inputFile);
     } catch (const PoDoFo::PdfError &eCode) {
       eCode.PrintErrorMsg ();
       return eCode.GetError ();
     }
   }
-  else if (strstr (inputFile, ".json"))
+  
+  if (inputFile.rfind (".json") != std::string::npos)
   {
-    std::cout << "Json file" << std::endl;
     std::vector<Driver> driverVector;
     driverVector = JsonToDrivers::convertToDriverObjects (inputFile);
-    std::cout << std::endl;
+
+    // Now that we have the data we can play
+    Gnuplot g1("linespoints");
+    g1.cmd ("set ydata time");
+    g1.cmd ("set timefmt \"%M:%S\"");
+    g1.cmd ("set format y \"%M:%.3S\"");
+    g1.set_xlabel ("Lap");
+    g1.set_ylabel ("Time");
+    g1.set_grid();
+
+    std::map<int, std::string> lapMap;
     for (std::vector<Driver>::iterator it = driverVector.begin (); it != driverVector.end (); ++it)
     {
-      std::cout << (*it).toString () << std::endl;
+      if (true == compareIndividuals)
+      {
+        for (int i = 0; i < NUM_DRIVERS; i++)
+        {
+          if ((*it).number () == driversToCompare[i])
+          {
+            std::cout << (*it).race () << std::endl;
+
+            lapMap = (*it).lapMap ();            
+            std::vector<int> x;
+            std::vector<std::string> y;
+            for (std::map<int,std::string>::iterator lm = lapMap.begin ();
+                  lm != lapMap.end (); ++lm)
+            {
+              x.push_back (lm->first);
+              y.push_back (lm->second);
+            }
+            if (x.size ())
+            {
+              std::ostringstream driverLabel;
+              driverLabel << (*it).number () << " " << (*it).name ();
+              g1.plot_xy (x, y, driverLabel.str ());
+            }
+          }
+        }
+      }
+      else
+      {
+        std::cout << (*it).raceAnalysis () << std::endl;
+        lapMap = (*it).lapMap ();            
+        std::vector<int> x;
+        std::vector<std::string> y;
+        for (std::map<int,std::string>::iterator lm = lapMap.begin ();
+              lm != lapMap.end (); ++lm)
+        {
+          x.push_back (lm->first);
+          y.push_back (lm->second);
+        }
+        if (x.size ())
+        {
+          std::ostringstream driverLabel;
+          driverLabel << (*it).number () << " " << (*it).name ();
+          g1.plot_xy (x, y, driverLabel.str ());
+        }
+      }
     }
+    wait_for_key ();
   }
   else
   {
-    std::cout << "Unrecognised file type" << std::endl;
+    std::cout << "Unrecognised file type, use lowercase extensions" << std::endl;
   }
   
-  //const char *pdfFile = argv[1];
   return 0;
 }
 

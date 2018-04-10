@@ -6,36 +6,37 @@
 
 /* 
  * File:   Lap.h
- * Author: brian
+ * Author: coherense-dev
  *
- * Created on 06 April 2018, 15:37
+ * Created on 09 April 2018, 09:27
  */
 
 #ifndef LAP_H
 #define LAP_H
 
-#include <string>
-
 class Lap {
 public:
   Lap();
-  Lap(const Lap& orig);
   virtual ~Lap();
+
+  void number (unsigned int number);
+  unsigned int number ();
   
-  void number (unsigned char lapNumber);
-  int number ();
+  void laptime (std::string lapTime);
+  std::string laptime ();
+  unsigned long laptimeInMs ();
   
-  void notes (std::string notes);
+  void notes (std::string lapNotes);
   std::string notes ();
   
-  void lapTime (std::string lapTime);
-  std::string lapTime ();
-  
-  void toString ();
+  std::string toString ();
 private:
-  unsigned char m_lapNumber;
-  std::string   m_notes;
-  std::string   m_lapTime;
+  unsigned long timeStringToMs (std::string timeString);
+
+  unsigned int m_lapNumber;
+  std::string m_lapTime;
+  unsigned long m_lapTimeInMs;
+  std::string m_lapNotes;
 };
 
 #endif /* LAP_H */

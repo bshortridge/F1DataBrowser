@@ -28,7 +28,7 @@ public:
   LaptimesToJson(const LaptimesToJson& orig);
   virtual ~LaptimesToJson();
   
-  static void convertPdfToJson (const char* pdfFile);
+  static std::string convertPdfToJson (const std::string pdfFile);
 private:
 
 };

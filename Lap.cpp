@@ -6,19 +6,16 @@
 
 /* 
  * File:   Lap.cpp
- * Author: brian
+ * Author: coherense-dev
  * 
- * Created on 06 April 2018, 15:37
+ * Created on 09 April 2018, 09:27
  */
+#include <sstream>
+#include <string>
 
 #include "Lap.h"
-#include <iostream>
 
 Lap::Lap ()
-{
-}
-
-Lap::Lap (const Lap& orig)
 {
 }
 
@@ -26,37 +23,85 @@ Lap::~Lap ()
 {
 }
 
-void Lap::number (unsigned char lapNumber)
+void Lap::number (unsigned int number)
 {
-  m_lapNumber = lapNumber;
+  m_lapNumber = number;
 }
 
-int Lap::number ()
+unsigned int Lap::number ()
 {
-  return m_lapNumber;
+  return m_lapNumber;    
 }
 
-void Lap::notes (std::string notes)
+void Lap::notes (std::string lapNotes)
 {
-  m_notes = notes;
+  m_lapNotes = lapNotes;
 }
 
 std::string Lap::notes ()
 {
-  return m_notes;
+  return m_lapNotes;
 }
 
-void Lap::lapTime (std::string lapTime)
+void Lap::laptime (std::string lapTime)
 {
   m_lapTime = lapTime;
+  m_lapTimeInMs = timeStringToMs (lapTime);
 }
 
-std::string Lap::lapTime ()
+std::string Lap::laptime ()
 {
   return m_lapTime;
 }
 
-void Lap::toString ()
+unsigned long Lap::laptimeInMs ()
 {
-  std::cout << "#" << std::dec << m_lapNumber << ": " << m_notes << " " << m_lapTime << std::endl;
+  return m_lapTimeInMs;
+}
+
+std::string Lap::toString ()
+{
+  std::ostringstream out;
+  
+  out << "[";
+  out << m_lapNumber;
+  out << "|" << m_lapNotes;
+  out << "|" << m_lapTime;
+  out << "]";
+
+  return out.str();
+}
+
+unsigned long Lap::timeStringToMs (std::string timeString)
+{
+  unsigned long timeInMs;
+  std::string hourString ("0"), minuteString ("0"), secondString ("0");
+  std::string millisecondString ("0");
+  std::size_t startIdx = 0;
+  std::size_t colonPos = timeString.find (":");
+  std::size_t decimalPos = timeString.find (".");
+  if (std::string::npos == decimalPos)
+  {
+    hourString = timeString.substr (startIdx, colonPos);
+    startIdx = colonPos + 1;
+    colonPos = timeString.find (":", startIdx);
+    decimalPos = timeString.length ();
+  }
+  
+  minuteString = timeString.substr (startIdx, colonPos - startIdx);
+  secondString = timeString.substr (colonPos + 1, decimalPos - colonPos);
+  if (decimalPos != timeString.length ())
+  {
+    millisecondString = timeString.substr (decimalPos + 1);
+  }
+  
+  int hours = std::stoi (hourString);
+  int minutes = std::stoi (minuteString);
+  int seconds = std::stoi (secondString);
+  int milliseconds = std::stoi (millisecondString);
+  
+  timeInMs = (hours * 60 * 60 * 1000) + (minutes * 60 * 1000)
+              + (seconds * 1000) + milliseconds;
+  
+  return timeInMs;
 }

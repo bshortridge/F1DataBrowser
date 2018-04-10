@@ -36,6 +36,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/Driver.o \
+	${OBJECTDIR}/JsonToDrivers.o \
+	${OBJECTDIR}/Lap.o \
+	${OBJECTDIR}/LaptimesToJson.o \
 	${OBJECTDIR}/main.o
 
 
@@ -67,6 +70,21 @@ ${OBJECTDIR}/Driver.o: Driver.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Driver.o Driver.cpp
+
+${OBJECTDIR}/JsonToDrivers.o: JsonToDrivers.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/JsonToDrivers.o JsonToDrivers.cpp
+
+${OBJECTDIR}/Lap.o: Lap.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Lap.o Lap.cpp
+
+${OBJECTDIR}/LaptimesToJson.o: LaptimesToJson.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/LaptimesToJson.o LaptimesToJson.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
