@@ -14,16 +14,28 @@
 #ifndef DRIVER_H
 #define DRIVER_H
 
+#include <vector>
+#include "Lap.h"
+
 class Driver {
 public:
-    Driver();
-    Driver(const Driver& orig);
-    virtual ~Driver();
-        
-    void DriverNumber (int driverNum);
-    int DriverNumber ();
+  Driver();
+  virtual ~Driver();
+  
+  void number (unsigned char number);
+  unsigned char number ();
+  
+  void name (std::string name);
+  std::string name ();
+  
+  void lap (Lap lap);
+  Lap lap ();
+  
+  std::string toString ();
 private:
-    int driverNumber;
+  unsigned char m_driverNumber;
+  std::string m_driverName;
+  std::vector<Lap> m_laps;  
 };
 
 #endif /* DRIVER_H */

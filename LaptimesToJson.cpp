@@ -1,27 +1,33 @@
-/* 
- * File:   main.cpp
- * Author: brian
- *
- * Created on 29 March 2018, 21:54
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
-#include <iostream>
+
+/* 
+ * File:   LaptimesToJson.cpp
+ * Author: brian
+ * 
+ * Created on 06 April 2018, 14:39
+ */
 #include <podofo/podofo.h>
-<<<<<<< HEAD
-=======
-#include <cstdlib>
-#include "Driver.h"
+#include <iostream>
 
-#include <iomanip>
+#include "LaptimesToJson.h"
 
-enum {
-    DRIVER_NUMBER = 0,
-    DRIVER_NAME,
-    LAP_NUMBER,
-    LAP_PITTED,
-    LAP_TIME
-};
+LaptimesToJson::LaptimesToJson ()
+{
+}
 
-void ReadPdf (const char* pdfFile)
+LaptimesToJson::LaptimesToJson (const LaptimesToJson& orig)
+{
+}
+
+LaptimesToJson::~LaptimesToJson ()
+{
+}
+
+void LaptimesToJson::convertPdfToJson (const char* pdfFile)
 {
   using namespace PoDoFo;
   int LapNo = 0;
@@ -104,7 +110,7 @@ void ReadPdf (const char* pdfFile)
               }
               case (LAP_PITTED):
               {
-                std::cout << "\"lapNotes\" : \"" << varStr << "\", ";
+                std::cout << "\"pitted\" : \"" << varStr << "\", ";
                 state = LAP_TIME;
                 break;
               }
@@ -137,48 +143,3 @@ void ReadPdf (const char* pdfFile)
             << "\n  ]"
             << "\n}" << std::endl;
 }
->>>>>>> 2c1517a22e76563223f75ad2efde25064de2933d
-
-#include "LaptimesToJson.h"
-#include "JsonToDrivers.h"
-/*
- * 
- */
-int main (int argc, char** argv)
-{
-  if (argc != 2)
-  {
-    std::cout << "Hello Brian!" << std::endl;
-    return -1;
-  }
-  
-  char *inputFile = argv[1];
-  if (strstr (inputFile, ".pdf"))
-  {
-    try {
-      LaptimesToJson::convertPdfToJson (inputFile);
-    } catch (const PoDoFo::PdfError &eCode) {
-      eCode.PrintErrorMsg ();
-      return eCode.GetError ();
-    }
-  }
-  else if (strstr (inputFile, ".json"))
-  {
-    std::cout << "Json file" << std::endl;
-    std::vector<Driver> driverVector;
-    driverVector = JsonToDrivers::convertToDriverObjects (inputFile);
-    std::cout << std::endl;
-    for (std::vector<Driver>::iterator it = driverVector.begin (); it != driverVector.end (); ++it)
-    {
-      std::cout << (*it).toString () << std::endl;
-    }
-  }
-  else
-  {
-    std::cout << "Unrecognised file type" << std::endl;
-  }
-  
-  //const char *pdfFile = argv[1];
-  return 0;
-}
-
