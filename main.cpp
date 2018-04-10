@@ -1,6 +1,6 @@
 /* 
  * File:   main.cpp
- * Author: brian
+ * Author: Brian Shortridge
  *
  * Created on 29 March 2018, 21:54
  */

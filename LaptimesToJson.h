@@ -6,7 +6,7 @@
 
 /* 
  * File:   LaptimesToJson.h
- * Author: brian
+ * Author: Brian Shortridge
  *
  * Created on 06 April 2018, 14:39
  */

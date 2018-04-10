@@ -1,6 +1,6 @@
 /* 
  * File:   Driver.h
- * Author: coherense-dev
+ * Author: Brian Shortridge
  *
  * Created on 05 April 2018, 16:11
  */

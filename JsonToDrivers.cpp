@@ -6,7 +6,7 @@
 
 /* 
  * File:   JsonToDrivers.cpp
- * Author: brian
+ * Author: Brian Shortridge
  * 
  * Created on 06 April 2018, 14:55
  */
@@ -40,7 +40,7 @@ std::vector<Driver> JsonToDrivers::convertToDriverObjects (const std::string jso
       Lap lap;
       int lapnum = jsonLap["lapNo"].asInt ();
       lap.number (lapnum);
-      lap.notes (jsonLap["pitted"].asString ());
+      lap.notes (jsonLap["lapNotes"].asString ());
       lap.laptime (jsonLap["lapTime"].asString ());
       lap.toString ();
       driver.lap (lap);

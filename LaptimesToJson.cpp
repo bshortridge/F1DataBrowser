@@ -6,7 +6,7 @@
 
 /* 
  * File:   LaptimesToJson.cpp
- * Author: brian
+ * Author: Brian Shortridge
  * 
  * Created on 06 April 2018, 14:39
  */
@@ -100,7 +100,7 @@ std::string LaptimesToJson::convertPdfToJson (const std::string pdfFile)
               }
               case (LAP_PITTED):
               {
-                jsonSS << "\"pitted\" : \"" << varStr << "\", ";
+                jsonSS << "\"lapNotes\" : \"" << varStr << "\", ";
                 state = LAP_TIME;
                 break;
               }

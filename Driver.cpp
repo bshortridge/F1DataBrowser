@@ -1,13 +1,13 @@
 /* 
  * File:   Driver.cpp
- * Author: coherense-dev
+ * Author: Brian Shortridge
  * 
  * Created on 05 April 2018, 16:11
  */
 
 #include <sstream>
 #include <iomanip>
-
+#include <iostream>
 #include "Driver.h"
 
 Driver::Driver ()
@@ -82,7 +82,7 @@ std::string Driver::raceAnalysis ()
     unsigned long laptime = l.laptimeInMs ();
     if (laptime > slowestLap)
     {
-      if (l.notes ().find ("P") != std::string::npos)
+      if (l.notes ().find ("P") == std::string::npos)
       {
         slowestLap = laptime;
       }
@@ -93,8 +93,9 @@ std::string Driver::raceAnalysis ()
   for (unsigned int i = 1; i < numLaps; i++)
   {
     Lap l = m_laps.at (i);
+    bool pitLap = (l.notes ().find ("P") != std::string::npos) ? true : false;
     unsigned long laptime = l.laptimeInMs ();
-    if (laptime < (fastestLap * 1.1))
+    if ((laptime < (fastestLap * 1.1)) && !pitLap)
     { // ignore pit laps and very slow laps
       totalTime += laptime;
       laps++;
@@ -102,7 +103,9 @@ std::string Driver::raceAnalysis ()
     else if (laps > 0)
     {
       unsigned long average = totalTime / laps;
-      out << " [" << laps << "|" << ulToLapString (average) << "] " << l.number ();
+      out << " [" << laps << "|" << ulToLapString (average) << "] ";
+      if (pitLap) { out << "P"; }
+      out << l.number ();
       laps = 0;
       totalTime = 0;
     }

@@ -6,7 +6,7 @@
 
 /* 
  * File:   Lap.h
- * Author: coherense-dev
+ * Author: Brian Shortridge
  *
  * Created on 09 April 2018, 09:27
  */
