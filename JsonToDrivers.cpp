@@ -32,7 +32,18 @@ std::vector<Driver> JsonToDrivers::convertToDriverObjects (const std::string jso
   {
     Driver driver;
     driver.number (drivers[i]["driverNumber"].asInt());
-    driver.name (drivers[i]["driverName"].asString());
+    switch (driver.number ())
+    {
+      case 33:
+        driver.name ("The Dutchman");
+        break;
+      case 44:
+        driver.name ("Our Lewis");
+        break;
+      default:
+        driver.name (drivers[i]["driverName"].asString());
+        break;
+    }
     int laps = drivers[i]["laps"].size ();
     for (int j = 0; j < laps; j++)
     {

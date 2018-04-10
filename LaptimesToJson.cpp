@@ -66,7 +66,20 @@ std::string LaptimesToJson::convertPdfToJson (const std::string pdfFile)
               }
               case (DRIVER_NAME):
               {
-                jsonSS << "      \"driverName\" : \"" << varStr << "\",\n";
+                jsonSS << "      \"driverName\" : \"";
+                if (!strcmp (varStr, "Lewis HAMILTON"))
+                {
+                  jsonSS << "Our Lewis";
+                }
+                else if (!strcmp (varStr, "Max VERSTAPPEN"))
+                {
+                  jsonSS << "The Dutchman";
+                }
+                else
+                {
+                  jsonSS << varStr;
+                }
+                jsonSS << "\",\n";
                 jsonSS << "      \"laps\" : [\n";
                 state = LAP_NUMBER;
                 break;
