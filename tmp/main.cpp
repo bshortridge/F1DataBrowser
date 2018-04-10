@@ -17,6 +17,17 @@
 #include "jsoncpp/json/json.h"
 
 #include "Driver.h"
+#include "gnuplot_i.hpp"
+
+void wait_for_key ()
+{
+  std::cout << std::endl << "Press ENTER to continue..." << std::endl;
+
+  std::cin.clear();
+  std::cin.ignore(std::cin.rdbuf()->in_avail());
+  std::cin.get();
+  return;
+}
 
 /*
  * 
@@ -25,7 +36,7 @@ int main (int argc, char** argv)
 {
   const int NUM_DRIVERS = 20;
   Json::Value root;
-  int driversToCompare[NUM_DRIVERS];
+  int driversToCompare[NUM_DRIVERS] = {0};
   bool compareIndividuals = false;
   
   if (argc < 2)
@@ -70,6 +81,15 @@ int main (int argc, char** argv)
   }
   
   // Now that we have the data, we can play.
+  Gnuplot g1("linespoints");
+  g1.cmd ("set ydata time");
+  g1.cmd ("set timefmt \"%M:%S\"");
+  g1.cmd ("set format y \"%M:%.3S\"");
+  g1.set_xlabel ("Lap");
+  g1.set_ylabel ("Time");
+  g1.set_grid();
+  
+  std::map<int, std::string> lapMap;
   
   for (std::vector<Driver>::iterator it = driverVector.begin (); it != driverVector.end (); ++it)
   {
@@ -79,15 +99,47 @@ int main (int argc, char** argv)
       {
         if ((*it).number () == driversToCompare[i])
         {
-          std::cout << (*it).raceAnalysis () << std::endl;
+          std::cout << (*it).race () << std::endl;
+          
+          lapMap = (*it).lapMap ();
+          std::vector<int> x;
+          std::vector<std::string> y;
+          for (std::map<int,std::string>::iterator lm = lapMap.begin ();
+                lm != lapMap.end (); ++lm)
+          {
+            x.push_back (lm->first);
+            y.push_back (lm->second);
+          }
+          if (x.size ())
+          {
+            std::ostringstream driverLabel;
+            driverLabel << (*it).number () << " " << (*it).name ();
+            g1.plot_xy (x, y, driverLabel.str ());
+          }
         }
       }
     }
     else
     {
       std::cout << (*it).raceAnalysis () << std::endl;
+      lapMap = (*it).lapMap ();
+      std::vector<int> x;
+      std::vector<std::string> y;
+      for (std::map<int,std::string>::iterator lm = lapMap.begin ();
+            lm != lapMap.end (); ++lm)
+      {
+        x.push_back (lm->first);
+        y.push_back (lm->second);
+      }
+      if (x.size ())
+      {
+        std::ostringstream driverLabel;
+        driverLabel << (*it).number () << " " << (*it).name ();
+        g1.plot_xy (x, y, driverLabel.str ());
+      }
     }
   }
+  wait_for_key ();
   return 0;
 }
 

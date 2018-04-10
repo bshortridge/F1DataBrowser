@@ -9,6 +9,7 @@
 #define DRIVER_H
 
 #include <vector>
+#include <map>
 
 #include "Lap.h"
 
@@ -17,8 +18,8 @@ public:
   Driver();
   virtual ~Driver();
   
-  void number (unsigned char number);
-  unsigned char number ();
+  void number (unsigned int number);
+  unsigned int number ();
   
   void name (std::string name);
   std::string name ();
@@ -27,8 +28,13 @@ public:
   Lap lap (unsigned int lapNumber);
   
   std::string toString ();
+  
   std::string raceAnalysis ();
+  std::string race ();
+  std::map<int,std::string> lapMap ();
 private:
+  std::string ulToLapString (unsigned long laptime);
+  
   unsigned char     m_driverNumber;
   std::string       m_driverName;
   std::vector<Lap>  m_laps;

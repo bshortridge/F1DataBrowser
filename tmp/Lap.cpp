@@ -46,11 +46,17 @@ std::string Lap::notes ()
 void Lap::laptime (std::string lapTime)
 {
   m_lapTime = lapTime;
+  m_lapTimeInMs = timeStringToMs (lapTime);
 }
 
 std::string Lap::laptime ()
 {
   return m_lapTime;
+}
+
+unsigned long Lap::laptimeInMs ()
+{
+  return m_lapTimeInMs;
 }
 
 std::string Lap::toString ()

@@ -24,16 +24,18 @@ public:
   
   void laptime (std::string lapTime);
   std::string laptime ();
+  unsigned long laptimeInMs ();
   
   void notes (std::string lapNotes);
   std::string notes ();
   
   std::string toString ();
-  static unsigned long timeStringToMs (std::string timeString);
 private:
+  unsigned long timeStringToMs (std::string timeString);
 
   unsigned int m_lapNumber;
   std::string m_lapTime;
+  unsigned long m_lapTimeInMs;
   std::string m_lapNotes;
 };
 
