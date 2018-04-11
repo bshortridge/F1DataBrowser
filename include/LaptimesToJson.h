@@ -18,7 +18,7 @@ enum {
     DRIVER_NUMBER = 0,
     DRIVER_NAME,
     LAP_NUMBER,
-    LAP_PITTED,
+    LAP_NOTES,
     LAP_TIME
 };
 

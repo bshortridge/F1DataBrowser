@@ -35,11 +35,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/Driver.o \
-	${OBJECTDIR}/JsonToDrivers.o \
-	${OBJECTDIR}/Lap.o \
-	${OBJECTDIR}/LaptimesToJson.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/src/Driver.o \
+	${OBJECTDIR}/src/JsonToDrivers.o \
+	${OBJECTDIR}/src/Lap.o \
+	${OBJECTDIR}/src/LaptimesToJson.o \
+	${OBJECTDIR}/src/main.o
 
 
 # C Compiler Flags
@@ -66,30 +66,30 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/Driver.o: Driver.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/Driver.o: src/Driver.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Driver.o Driver.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Driver.o src/Driver.cpp
 
-${OBJECTDIR}/JsonToDrivers.o: JsonToDrivers.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/JsonToDrivers.o: src/JsonToDrivers.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/JsonToDrivers.o JsonToDrivers.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/JsonToDrivers.o src/JsonToDrivers.cpp
 
-${OBJECTDIR}/Lap.o: Lap.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/Lap.o: src/Lap.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Lap.o Lap.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Lap.o src/Lap.cpp
 
-${OBJECTDIR}/LaptimesToJson.o: LaptimesToJson.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/LaptimesToJson.o: src/LaptimesToJson.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/LaptimesToJson.o LaptimesToJson.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/LaptimesToJson.o src/LaptimesToJson.cpp
 
-${OBJECTDIR}/main.o: main.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/main.o: src/main.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.cpp
 
 # Subprojects
 .build-subprojects:
