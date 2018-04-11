@@ -5,9 +5,11 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>include/Driver.h</itemPath>
+      <itemPath>include/F1App.h</itemPath>
       <itemPath>include/JsonToDrivers.h</itemPath>
       <itemPath>include/Lap.h</itemPath>
       <itemPath>include/LaptimesToJson.h</itemPath>
+      <itemPath>include/MainFrame.h</itemPath>
       <itemPath>include/gnuplot_i.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -18,9 +20,11 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>src/Driver.cpp</itemPath>
+      <itemPath>src/F1App.cpp</itemPath>
       <itemPath>src/JsonToDrivers.cpp</itemPath>
       <itemPath>src/Lap.cpp</itemPath>
       <itemPath>src/LaptimesToJson.cpp</itemPath>
+      <itemPath>src/MainFrame.cpp</itemPath>
       <itemPath>src/main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -33,6 +37,7 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile.mk</itemPath>
+      <itemPath>./README.md</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile.mk</projectmakefile>
@@ -50,15 +55,19 @@
             <pElem>/usr/include</pElem>
             <pElem>include</pElem>
           </incDir>
+          <commandLine>`wx-config --cxxflags`</commandLine>
         </ccTool>
         <linkerTool>
           <linkerLibItems>
             <linkerLibLibItem>podofo</linkerLibLibItem>
             <linkerLibLibItem>jsoncpp</linkerLibLibItem>
           </linkerLibItems>
+          <commandLine>`wx-config --libs`</commandLine>
         </linkerTool>
       </compileType>
       <item path="include/Driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/F1App.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/JsonToDrivers.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -66,15 +75,21 @@
       </item>
       <item path="include/LaptimesToJson.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/MainFrame.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/gnuplot_i.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/Driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/F1App.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/JsonToDrivers.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/Lap.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/LaptimesToJson.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/MainFrame.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -101,21 +116,29 @@
       </compileType>
       <item path="include/Driver.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/F1App.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/JsonToDrivers.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Lap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/LaptimesToJson.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/MainFrame.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/gnuplot_i.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/Driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/F1App.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/JsonToDrivers.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/Lap.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/LaptimesToJson.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/MainFrame.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -36,9 +36,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/Driver.o \
+	${OBJECTDIR}/src/F1App.o \
 	${OBJECTDIR}/src/JsonToDrivers.o \
 	${OBJECTDIR}/src/Lap.o \
 	${OBJECTDIR}/src/LaptimesToJson.o \
+	${OBJECTDIR}/src/MainFrame.o \
 	${OBJECTDIR}/src/main.o
 
 
@@ -71,6 +73,11 @@ ${OBJECTDIR}/src/Driver.o: src/Driver.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Driver.o src/Driver.cpp
 
+${OBJECTDIR}/src/F1App.o: src/F1App.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/F1App.o src/F1App.cpp
+
 ${OBJECTDIR}/src/JsonToDrivers.o: src/JsonToDrivers.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
@@ -85,6 +92,11 @@ ${OBJECTDIR}/src/LaptimesToJson.o: src/LaptimesToJson.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/LaptimesToJson.o src/LaptimesToJson.cpp
+
+${OBJECTDIR}/src/MainFrame.o: src/MainFrame.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/MainFrame.o src/MainFrame.cpp
 
 ${OBJECTDIR}/src/main.o: src/main.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

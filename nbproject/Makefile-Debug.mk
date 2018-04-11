@@ -36,9 +36,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/Driver.o \
+	${OBJECTDIR}/src/F1App.o \
 	${OBJECTDIR}/src/JsonToDrivers.o \
 	${OBJECTDIR}/src/Lap.o \
 	${OBJECTDIR}/src/LaptimesToJson.o \
+	${OBJECTDIR}/src/MainFrame.o \
 	${OBJECTDIR}/src/main.o
 
 
@@ -46,8 +48,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=`wx-config --cxxflags` 
+CXXFLAGS=`wx-config --cxxflags` 
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -64,12 +66,17 @@ LDLIBSOPTIONS=-lpodofo -ljsoncpp
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser ${OBJECTFILES} ${LDLIBSOPTIONS} `wx-config --libs`
 
 ${OBJECTDIR}/src/Driver.o: src/Driver.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Driver.o src/Driver.cpp
+
+${OBJECTDIR}/src/F1App.o: src/F1App.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/F1App.o src/F1App.cpp
 
 ${OBJECTDIR}/src/JsonToDrivers.o: src/JsonToDrivers.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -85,6 +92,11 @@ ${OBJECTDIR}/src/LaptimesToJson.o: src/LaptimesToJson.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/LaptimesToJson.o src/LaptimesToJson.cpp
+
+${OBJECTDIR}/src/MainFrame.o: src/MainFrame.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/MainFrame.o src/MainFrame.cpp
 
 ${OBJECTDIR}/src/main.o: src/main.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
