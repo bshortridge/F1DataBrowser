@@ -4,10 +4,12 @@
  *
  * Created on 29 March 2018, 21:54
  */
-//#include "F1App.h"
-//
-//IMPLEMENT_APP (F1App);
+/*
+#include "F1App.h"
 
+IMPLEMENT_APP (F1App);
+*/
+/**/
 #include <iostream>
 #include <podofo/podofo.h>
 
@@ -30,10 +32,6 @@ void wait_for_key ()
   return;
 }
 
-
-/*
- * 
- */
 int main (int argc, char** argv)
 {
   const int NUM_DRIVERS = 20;
@@ -141,4 +139,4 @@ int main (int argc, char** argv)
   
   return 0;
 }
-
+/**/

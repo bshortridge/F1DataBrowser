@@ -34,6 +34,9 @@ std::vector<Driver> JsonToDrivers::convertToDriverObjects (const std::string jso
     driver.number (drivers[i]["driverNumber"].asInt());
     switch (driver.number ())
     {
+      case 20:
+        driver.name ("The Viking");
+        break;
       case 33:
         driver.name ("The Dutchman");
         break;

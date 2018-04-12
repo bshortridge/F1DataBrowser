@@ -112,6 +112,10 @@ std::string LaptimesToJson::convertPdfToJson (const std::string pdfFile)
                 {
                   jsonSS << "The Dutchman";
                 }
+                else if (!strcmp (varStr, "Kevin MAGNUSSEN"))
+                {
+                  jsonSS << "The Viking";
+                }
                 else
                 {
                   jsonSS << varStr;
