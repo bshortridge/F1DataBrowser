@@ -27,7 +27,7 @@ private:
   void Quit       (wxCommandEvent& event);
   
   wxBookCtrl  *book;
-  wxTextCtrl  *MainEditBox;
+  wxTextCtrl  *JSONdisplayBox;
   wxMenuBar   *MainMenu;
   
   wxString    LastDirectory;

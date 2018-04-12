@@ -24,7 +24,7 @@ wxEND_EVENT_TABLE ()
 MainFrame::MainFrame (const wxString& title, const wxPoint& pos, const wxSize& size)
   : wxFrame ((wxFrame*) NULL, -1, title, pos, size)
 {
-  CreateStatusBar (2);
+  CreateStatusBar ();
   
   MainMenu = new wxMenuBar ();
   
@@ -41,15 +41,15 @@ MainFrame::MainFrame (const wxString& title, const wxPoint& pos, const wxSize& s
   SetMenuBar (MainMenu);
   
   book = new wxBookCtrl (this, CTRL_Book);
-//  wxPanel *panel = new wxPanel (book);
-//  wxBoxSizer *mysizer = new wxBoxSizer (wxVERTICAL);
-//  panel->SetSizer (mysizer);
-//  MainEditBox = new wxTextCtrl (panel, TEXT_Main, _(""),
-//                                wxDefaultPosition, wxDefaultSize, 
-//                                wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH,
-//                                wxDefaultValidator, wxTextCtrlNameStr);
-//  mysizer->Add (MainEditBox, 1, wxEXPAND | wxALL, 5);
-//  book->AddPage (panel, _T("JSON"), false);
+  wxPanel *panel = new wxPanel (book);
+  wxBoxSizer *mysizer = new wxBoxSizer (wxVERTICAL);
+  panel->SetSizer (mysizer);
+  JSONdisplayBox = new wxTextCtrl (panel, TEXT_Main, _(""),
+                                wxDefaultPosition, wxDefaultSize, 
+                                wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH,
+                                wxDefaultValidator, wxTextCtrlNameStr);
+  mysizer->Add (JSONdisplayBox, 1, wxEXPAND | wxALL, 5);
+  book->AddPage (panel, _T("JSON"), false);
   
   LastDirectory = wxEmptyString;
 }
@@ -82,27 +82,16 @@ void MainFrame::LoadFile (wxCommandEvent& WXUNUSED(event))
     
     if (CurrentDocPath.rfind (".json") != std::string::npos)
     {
-      //book = new wxBookCtrl (mainWindow, CTRL_Book);
-      wxPanel *panel = new wxPanel (book);
-      wxBoxSizer *mysizer = new wxBoxSizer (wxVERTICAL);
-      panel->SetSizer (mysizer);
-      MainEditBox = new wxTextCtrl (panel, TEXT_Main, _(""),
-                                    wxDefaultPosition, wxDefaultSize, 
-                                    wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH,
-                                    wxDefaultValidator, wxTextCtrlNameStr);
-      mysizer->Add (MainEditBox, 1, wxEXPAND | wxALL, 5);
-      book->AddPage (panel, _T("JSON"), false);
-      
-      MainEditBox->LoadFile (CurrentDocPath);
-      SetTitle (OpenDialog->GetFilename ());
+      JSONdisplayBox->LoadFile (CurrentDocPath);
+      SetStatusText (OpenDialog->GetFilename ());
     }
   }
 }
 
 void MainFrame::CloseFile (wxCommandEvent& event)
 {
-  MainEditBox->Clear ();
-  SetTitle (_(""));
+  JSONdisplayBox->Clear ();
+  SetStatusText (_(""));
 }
 
 void MainFrame::Quit (wxCommandEvent& WXUNUSED(event))
