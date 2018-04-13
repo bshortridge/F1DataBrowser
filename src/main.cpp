@@ -112,7 +112,7 @@ int main (int argc, char** argv)
       }
       else
       {
-        std::cout << (*it).raceAnalysis () << std::endl;
+        std::cout << (*it).stintAnalysis () << std::endl;
         lapMap = (*it).lapMap ();            
         std::vector<int> x;
         std::vector<std::string> y;

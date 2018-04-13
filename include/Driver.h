@@ -29,7 +29,7 @@ public:
   
   std::string toString ();
   
-  std::string raceAnalysis ();
+  std::string stintAnalysis ();
   std::string race ();
   std::map<int,std::string> lapMap ();
 private:

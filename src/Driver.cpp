@@ -63,7 +63,7 @@ std::string Driver::toString ()
   return out.str();
 }
 
-std::string Driver::raceAnalysis ()
+std::string Driver::stintAnalysis ()
 {
   std::ostringstream out;
   
@@ -132,10 +132,10 @@ std::string Driver::race ()
 {
   std::ostringstream out;
   
-  out << raceAnalysis () << std::endl;
+  out << stintAnalysis () << std::endl;
   
   long unsigned int numLaps = m_laps.size ();
-  for (unsigned int i = 1; i < numLaps; i++)
+  for (unsigned int i = 0; i < numLaps; i++)
   {
     Lap l = m_laps.at (i);
     out << "[" << l.number () << "|" << l.laptime () << "]";
