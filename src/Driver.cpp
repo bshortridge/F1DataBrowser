@@ -100,19 +100,18 @@ std::string Driver::stintAnalysis ()
       totalTime += laptime;
       laps++;
     }
-    else if (laps > 0)
+    else if (laps > 0 && pitLap)
     {
       unsigned long average = totalTime / laps;
       out << " [" << laps << "|" << ulToLapString (average) << "] ";
-      if (pitLap) { out << "P"; }
-      out << l.number ();
+      out << "P" << l.number ();
       laps = 0;
       totalTime = 0;
     }
-    else
-    {
-      out << "|" << l.number ();
-    }
+//    else
+//    {
+//      out << "|" << l.number ();
+//    }
   }
   if (laps > 0)
   {
