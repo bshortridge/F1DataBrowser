@@ -10,9 +10,15 @@
 #include <podofo/podofo.h>
 #include "LaptimesToJson.h"
 
+#include <wx/xy/xyplot.h>
+#include <wx/xy/xysimpledataset.h>
+#include <wx/xy/xylinerenderer.h>
+
 enum {
   TEXT_Main = 1,
-  CTRL_Book
+  CTRL_Book,
+  ID_Button1,
+  ID_Button2
 };
 
 wxBEGIN_EVENT_TABLE (MainFrame, wxFrame)
@@ -24,6 +30,41 @@ wxEND_EVENT_TABLE ()
 MainFrame::MainFrame (const wxString& title, const wxPoint& pos, const wxSize& size)
   : wxFrame ((wxFrame*) NULL, -1, title, pos, size)
 {
+  // serie xy data
+  double data[][2] = {
+      { 10, 20, },
+      { 13, 16, },
+      { 7, 30, },
+      { 15, 34, },
+      { 25, 4, },
+  };
+
+  // first step: create plot
+  XYPlot *plot = new XYPlot();
+
+  // create dataset
+  XYSimpleDataset *dataset = new XYSimpleDataset();
+
+  // and add serie to it
+  dataset->AddSerie((double *) data, WXSIZEOF(data));
+
+  // set line renderer to dataset
+  dataset->SetRenderer(new XYLineRenderer());
+
+  // create left and bottom number axes
+  NumberAxis *leftAxis = new NumberAxis(AXIS_LEFT);
+  NumberAxis *bottomAxis = new NumberAxis(AXIS_BOTTOM);
+
+  // optional: set axis titles
+  leftAxis->SetTitle(wxT("X"));
+  bottomAxis->SetTitle(wxT("Y"));
+
+  // add axes and dataset to plot
+  plot->AddObjects(dataset, leftAxis, bottomAxis);
+
+  // and finally create chart
+  Chart *chart = new Chart(plot, _T("Simple XY demo"));
+  
   CreateStatusBar ();
   
   MainMenu = new wxMenuBar ();
@@ -50,6 +91,18 @@ MainFrame::MainFrame (const wxString& title, const wxPoint& pos, const wxSize& s
                                 wxDefaultValidator, wxTextCtrlNameStr);
   mysizer->Add (JSONdisplayBox, 1, wxEXPAND | wxALL, 5);
   book->AddPage (panel, _T("JSON"), false);
+  
+  panel = new wxPanel (book);
+  wxChartPanel *chartPanel = new wxChartPanel (panel, wxID_ANY, chart, wxPoint (0, 0), wxSize (1, 1));
+  mysizer = new wxBoxSizer (wxVERTICAL);
+  panel->SetSizer (mysizer);
+  mysizer->Clear();
+  mysizer->Add (chartPanel, 1, wxGROW | wxALL, 5);
+  mysizer->Layout ();
+//  Chart *chart = new Chart (plot, GetName ());
+//  wxChartPanel *m_chartPanel = new wxChartPanel (panel, wxID_ANY, chart);
+//  m_chartPanel->SetChart (chart);
+  book->AddPage (panel, _T("Tab1"), true);
   
   LastDirectory = wxEmptyString;
 }
