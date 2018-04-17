@@ -61,6 +61,7 @@
           <linkerLibItems>
             <linkerLibLibItem>podofo</linkerLibLibItem>
             <linkerLibLibItem>jsoncpp</linkerLibLibItem>
+            <linkerLibFileItem>../wxcode-code/components/freechart/lib/libwxcode_gtk2u_freechart-3.0.so</linkerLibFileItem>
           </linkerLibItems>
           <commandLine>`wx-config --libs`</commandLine>
         </linkerTool>

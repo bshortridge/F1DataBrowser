@@ -16,6 +16,8 @@
 
 #include <wx/bookctrl.h>
 
+#include "gnuplot_i.hpp"
+
 class MainFrame : public wxFrame
 {
 public:
@@ -25,13 +27,15 @@ private:
   void LoadFile   (wxCommandEvent& event);
   void CloseFile  (wxCommandEvent& event);
   void Quit       (wxCommandEvent& event);
+  Gnuplot *g1;
   
-  wxBookCtrl  *book;
-  wxTextCtrl  *JSONdisplayBox;
-  wxMenuBar   *MainMenu;
+  wxMenuBar     *m_MainMenu;
+  wxBookCtrl    *m_Book;
+  wxTextCtrl    *m_JSONdisplayBox;
+  wxPanel       *m_GraphControlPanel;
   
-  wxString    LastDirectory;
-  wxString    CurrentDocPath;
+  wxString    m_LastDirectory;
+  wxString    m_CurrentDocPath;
   
   wxDECLARE_EVENT_TABLE ();
 };

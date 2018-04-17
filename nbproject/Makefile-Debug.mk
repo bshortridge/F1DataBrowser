@@ -58,11 +58,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lpodofo -ljsoncpp
+LDLIBSOPTIONS=-lpodofo -ljsoncpp ../wxcode-code/components/freechart/lib/libwxcode_gtk2u_freechart-3.0.so
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser: ../wxcode-code/components/freechart/lib/libwxcode_gtk2u_freechart-3.0.so
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -109,6 +111,8 @@ ${OBJECTDIR}/src/main.o: src/main.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
+	${RM} -r ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libwxcode_gtk2u_freechart-3.0.so
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser
 
 # Subprojects
 .clean-subprojects:

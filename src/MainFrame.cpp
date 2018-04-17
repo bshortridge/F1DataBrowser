@@ -8,11 +8,9 @@
 #include "MainFrame.h"
 
 #include <podofo/podofo.h>
+#include "Driver.h"
 #include "LaptimesToJson.h"
-
-#include <wx/xy/xyplot.h>
-#include <wx/xy/xysimpledataset.h>
-#include <wx/xy/xylinerenderer.h>
+#include "JsonToDrivers.h"
 
 enum {
   TEXT_Main = 1,
@@ -30,120 +28,116 @@ wxEND_EVENT_TABLE ()
 MainFrame::MainFrame (const wxString& title, const wxPoint& pos, const wxSize& size)
   : wxFrame ((wxFrame*) NULL, -1, title, pos, size)
 {
-  // serie xy data
-  double data[][2] = {
-      { 10, 20, },
-      { 13, 16, },
-      { 7, 30, },
-      { 15, 34, },
-      { 25, 4, },
-  };
-
-  // first step: create plot
-  XYPlot *plot = new XYPlot();
-
-  // create dataset
-  XYSimpleDataset *dataset = new XYSimpleDataset();
-
-  // and add serie to it
-  dataset->AddSerie((double *) data, WXSIZEOF(data));
-
-  // set line renderer to dataset
-  dataset->SetRenderer(new XYLineRenderer());
-
-  // create left and bottom number axes
-  NumberAxis *leftAxis = new NumberAxis(AXIS_LEFT);
-  NumberAxis *bottomAxis = new NumberAxis(AXIS_BOTTOM);
-
-  // optional: set axis titles
-  leftAxis->SetTitle(wxT("X"));
-  bottomAxis->SetTitle(wxT("Y"));
-
-  // add axes and dataset to plot
-  plot->AddObjects(dataset, leftAxis, bottomAxis);
-
-  // and finally create chart
-  Chart *chart = new Chart(plot, _T("Simple XY demo"));
-  
   CreateStatusBar ();
-  
-  MainMenu = new wxMenuBar ();
-  
+
+  m_MainMenu = new wxMenuBar ();
   wxMenu *FileMenu = new wxMenu ();
   FileMenu->Append (wxID_OPEN, _("&Load File\tCtrl-L"),
                     _("Load pdf or json file for processing"));
   FileMenu->Append (wxID_CLOSE, _("&Close File\tCtrl-W"),
                     _("Close current file"));
-
   FileMenu->AppendSeparator ();
   FileMenu->Append (wxID_EXIT, _("&Quit\tCtrl-Q"), _("Exit the program"));
+  m_MainMenu->Append (FileMenu, _("&File"));
+  SetMenuBar (m_MainMenu);
   
-  MainMenu->Append (FileMenu, _("&File"));
-  SetMenuBar (MainMenu);
-  
-  book = new wxBookCtrl (this, CTRL_Book);
-  wxPanel *panel = new wxPanel (book);
+  m_Book = new wxBookCtrl (this, CTRL_Book);
+  wxPanel *panel = new wxPanel (m_Book);
   wxBoxSizer *mysizer = new wxBoxSizer (wxVERTICAL);
   panel->SetSizer (mysizer);
-  JSONdisplayBox = new wxTextCtrl (panel, TEXT_Main, _(""),
-                                wxDefaultPosition, wxDefaultSize, 
-                                wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH,
-                                wxDefaultValidator, wxTextCtrlNameStr);
-  mysizer->Add (JSONdisplayBox, 1, wxEXPAND | wxALL, 5);
-  book->AddPage (panel, _T("JSON"), false);
+  m_JSONdisplayBox = new wxTextCtrl (panel, TEXT_Main, _(""),
+                                      wxDefaultPosition, wxDefaultSize, 
+                                      wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH,
+                                      wxDefaultValidator, wxTextCtrlNameStr);
+  mysizer->Add (m_JSONdisplayBox, 1, wxEXPAND | wxALL, 5);
+  m_Book->AddPage (panel, _T("JSON"), false);
   
-  panel = new wxPanel (book);
-  wxChartPanel *chartPanel = new wxChartPanel (panel, wxID_ANY, chart, wxPoint (0, 0), wxSize (1, 1));
-  mysizer = new wxBoxSizer (wxVERTICAL);
-  panel->SetSizer (mysizer);
-  mysizer->Clear();
-  mysizer->Add (chartPanel, 1, wxGROW | wxALL, 5);
-  mysizer->Layout ();
-//  Chart *chart = new Chart (plot, GetName ());
-//  wxChartPanel *m_chartPanel = new wxChartPanel (panel, wxID_ANY, chart);
-//  m_chartPanel->SetChart (chart);
-  book->AddPage (panel, _T("Tab1"), true);
+  m_GraphControlPanel = new wxPanel (m_Book);
+  wxGridSizer *gs = new wxGridSizer (5, 4, 3, 3);
+  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Kimi")));
+  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Vettel")));
+  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Kimi")));
+  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Vettel")));
+  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Kimi")));
+  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Vettel")));
+      m_GraphControlPanel->SetSizer (gs);
+  m_Book->AddPage (m_GraphControlPanel, _T("Graph Control"), true);
   
-  LastDirectory = wxEmptyString;
+  g1 = new Gnuplot ("linespoints");
+  g1->cmd ("set ydata time");
+  g1->cmd ("set timefmt \"%M:%S\"");
+  g1->cmd ("set format y \"%M:%.3S\"");
+  g1->set_xlabel ("Lap");
+  g1->set_ylabel ("Time");
+  g1->set_grid();
+  
+  m_LastDirectory = wxEmptyString;
 }
 
 void MainFrame::LoadFile (wxCommandEvent& WXUNUSED(event))
 {
   wxFileDialog *OpenDialog = new wxFileDialog (this, _("Choose a file to open"),
-    LastDirectory, wxEmptyString,
-    _("Pdf / JSON files (*.pdf, *.json)|*.pdf;*.json|Pdf files (*.pdf)|*.pdf"
-      "|JSON files (*.json)|*.json"),
-    wxFD_OPEN, wxDefaultPosition);
+                              m_LastDirectory, wxEmptyString,
+                              _("Pdf / JSON files (*.pdf, *.json)|*.pdf;*.json"
+                                "|Pdf files (*.pdf)|*.pdf"
+                                "|JSON files (*.json)|*.json"),
+                              wxFD_OPEN, wxDefaultPosition);
   
   if (OpenDialog->ShowModal () == wxID_OK)
   {
-    std::string inputFile;
-    CurrentDocPath = OpenDialog->GetPath ();
-    LastDirectory = OpenDialog->GetDirectory ();
+    m_CurrentDocPath = OpenDialog->GetPath ();
+    m_LastDirectory = OpenDialog->GetDirectory ();
     
-    if (CurrentDocPath.rfind (".pdf") != std::string::npos)
+    if (m_CurrentDocPath.rfind (".pdf") != std::string::npos)
     { // pdf entered - extract data to json
       try {
-        inputFile = LaptimesToJson::convertPdfToJson (CurrentDocPath.ToStdString ());
-        CurrentDocPath = inputFile;
-        OpenDialog->SetPath (CurrentDocPath);
+        m_CurrentDocPath = LaptimesToJson::convertPdfToJson (m_CurrentDocPath.ToStdString ());
+        OpenDialog->SetPath (m_CurrentDocPath);
       } catch (const PoDoFo::PdfError &eCode) {
         eCode.PrintErrorMsg ();
         return;
       }
     }
     
-    if (CurrentDocPath.rfind (".json") != std::string::npos)
+    if (m_CurrentDocPath.rfind (".json") != std::string::npos)
     {
-      JSONdisplayBox->LoadFile (CurrentDocPath);
+      m_JSONdisplayBox->LoadFile (m_CurrentDocPath);
       SetStatusText (OpenDialog->GetFilename ());
+      
+      // We have the data, now we can play
+      wxGridSizer *gs = new wxGridSizer (5, 4, 3, 3);
+
+      std::vector<Driver> driverVector;
+      driverVector = JsonToDrivers::convertToDriverObjects (m_CurrentDocPath.ToStdString ());
+      std::map<int, std::string> lapMap;
+      for (std::vector<Driver>::iterator it = driverVector.begin (); it != driverVector.end (); ++it)
+      {
+        gs->Add (new wxCheckBox (m_GraphControlPanel, -1, (*it).name ()));
+        std::cout << (*it).stintAnalysis () << std::endl;
+        lapMap = (*it).lapMap ();            
+        std::vector<int> x;
+        std::vector<std::string> y;
+        for (std::map<int,std::string>::iterator lm = lapMap.begin ();
+              lm != lapMap.end (); ++lm)
+        {
+          x.push_back (lm->first);
+          y.push_back (lm->second);
+        }
+        if (x.size ())
+        {
+          std::ostringstream driverLabel;
+          driverLabel << (*it).number () << " " << (*it).name ();
+          g1->plot_xy (x, y, driverLabel.str ());
+        }
+      }
+      m_GraphControlPanel->SetSizer (gs);
     }
   }
 }
 
 void MainFrame::CloseFile (wxCommandEvent& event)
 {
-  JSONdisplayBox->Clear ();
+  m_JSONdisplayBox->Clear ();
   SetStatusText (_(""));
 }
 

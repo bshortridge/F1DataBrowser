@@ -4,12 +4,12 @@
  *
  * Created on 29 March 2018, 21:54
  */
-/*
+
 #include "F1App.h"
 
 IMPLEMENT_APP (F1App);
-*/
 /**/
+/*
 #include <iostream>
 #include <podofo/podofo.h>
 
