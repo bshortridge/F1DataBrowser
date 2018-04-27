@@ -10,7 +10,8 @@
 #include <iostream>
 #include "Driver.h"
 
-Driver::Driver ()
+Driver::Driver () :
+  m_showGraph(false)
 {
 }
 
@@ -46,6 +47,16 @@ void Driver::lap (Lap lap)
 Lap Driver::lap (unsigned int lapNumber)
 {
   m_laps.at(lapNumber - 1); // Index starts at 0, lapnumber starts at 1
+}
+
+void Driver::showGraph (bool show)
+{
+  m_showGraph = show;
+}
+
+bool Driver::showGraph ()
+{
+  return m_showGraph;
 }
 
 std::string Driver::toString ()

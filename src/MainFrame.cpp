@@ -11,18 +11,21 @@
 #include "Driver.h"
 #include "LaptimesToJson.h"
 #include "JsonToDrivers.h"
+#include "gnuplot_i.hpp"
 
 enum {
   TEXT_Main = 1,
   CTRL_Book,
   ID_Button1,
-  ID_Button2
+  ID_Button2,
+  ID_Checkbox
 };
 
 wxBEGIN_EVENT_TABLE (MainFrame, wxFrame)
   EVT_MENU (wxID_OPEN, MainFrame::LoadFile)
   EVT_MENU (wxID_CLOSE, MainFrame::CloseFile)
   EVT_MENU (wxID_EXIT, MainFrame::Quit)
+  EVT_CHECKBOX (ID_Checkbox, MainFrame::handleCheckBox)
 wxEND_EVENT_TABLE ()
 
 MainFrame::MainFrame (const wxString& title, const wxPoint& pos, const wxSize& size)
@@ -54,13 +57,7 @@ MainFrame::MainFrame (const wxString& title, const wxPoint& pos, const wxSize& s
   
   m_GraphControlPanel = new wxPanel (m_Book);
   wxGridSizer *gs = new wxGridSizer (5, 4, 3, 3);
-  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Kimi")));
-  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Vettel")));
-  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Kimi")));
-  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Vettel")));
-  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Kimi")));
-  gs->Add (new wxCheckBox (m_GraphControlPanel, -1, _T("Vettel")));
-      m_GraphControlPanel->SetSizer (gs);
+  m_GraphControlPanel->SetSizer (gs);
   m_Book->AddPage (m_GraphControlPanel, _T("Graph Control"), true);
   
   g1 = new Gnuplot ("linespoints");
@@ -72,6 +69,57 @@ MainFrame::MainFrame (const wxString& title, const wxPoint& pos, const wxSize& s
   g1->set_grid();
   
   m_LastDirectory = wxEmptyString;
+}
+
+MainFrame::~MainFrame ()
+{
+  std::cout << "MainFrame destructor called" << std::endl;
+}
+
+void MainFrame::drawGraph ()
+{
+  try
+  {
+    g1->reset_plot ();
+    g1->remove_tmpfiles ();
+  }
+  catch (GnuplotException ge)
+  {
+    std::cout << ge.what() << std::endl;
+  }
+  std::map<int, std::string> lapMap;
+  for (std::vector<Driver>::iterator it = m_driverVector.begin (); it != m_driverVector.end (); ++it)
+  {
+    if (false == (*it).showGraph ())
+    {
+      continue;
+    }
+    std::cout << (*it).stintAnalysis () << std::endl;
+    lapMap = (*it).lapMap ();            
+    std::vector<int> x;
+    std::vector<std::string> y;
+    for (std::map<int,std::string>::iterator lm = lapMap.begin ();
+          lm != lapMap.end (); ++lm)
+    {
+      x.push_back (lm->first);
+      y.push_back (lm->second);
+    }
+    if (x.size ())
+    {
+      std::ostringstream driverLabel;
+      driverLabel << (*it).number () << " " << (*it).name ();
+      try
+      {
+        g1->plot_xy (x, y, driverLabel.str ());
+        
+      }
+      catch (GnuplotException ge)
+      {
+        std::cout << ge.what() << std::endl;
+      }
+
+    }
+  }
 }
 
 void MainFrame::LoadFile (wxCommandEvent& WXUNUSED(event))
@@ -105,33 +153,23 @@ void MainFrame::LoadFile (wxCommandEvent& WXUNUSED(event))
       SetStatusText (OpenDialog->GetFilename ());
       
       // We have the data, now we can play
-      wxGridSizer *gs = new wxGridSizer (5, 4, 3, 3);
+      m_driverVector = JsonToDrivers::convertToDriverObjects (m_CurrentDocPath.ToStdString ());
 
-      std::vector<Driver> driverVector;
-      driverVector = JsonToDrivers::convertToDriverObjects (m_CurrentDocPath.ToStdString ());
+      wxGridSizer *gs = new wxGridSizer (5, 4, 3, 3);
       std::map<int, std::string> lapMap;
-      for (std::vector<Driver>::iterator it = driverVector.begin (); it != driverVector.end (); ++it)
+      for (std::vector<Driver>::iterator it = m_driverVector.begin (); it != m_driverVector.end (); ++it)
       {
-        gs->Add (new wxCheckBox (m_GraphControlPanel, -1, (*it).name ()));
-        std::cout << (*it).stintAnalysis () << std::endl;
-        lapMap = (*it).lapMap ();            
-        std::vector<int> x;
-        std::vector<std::string> y;
-        for (std::map<int,std::string>::iterator lm = lapMap.begin ();
-              lm != lapMap.end (); ++lm)
-        {
-          x.push_back (lm->first);
-          y.push_back (lm->second);
-        }
-        if (x.size ())
-        {
-          std::ostringstream driverLabel;
-          driverLabel << (*it).number () << " " << (*it).name ();
-          g1->plot_xy (x, y, driverLabel.str ());
-        }
+        wxCheckBox *cb_driver = new wxCheckBox (m_GraphControlPanel, ID_Checkbox, (*it).name ());
+        cb_driver->SetValue (true);
+        (*it).showGraph (true);
+        cb_driver->SetName (std::to_string ((*it).number ()));
+        gs->Add ((wxControl *)cb_driver);
       }
+      m_GraphControlPanel->Fit ();
       m_GraphControlPanel->SetSizer (gs);
+      drawGraph ();
     }
+    *g1 << "show plot";
   }
 }
 
@@ -144,4 +182,21 @@ void MainFrame::CloseFile (wxCommandEvent& event)
 void MainFrame::Quit (wxCommandEvent& WXUNUSED(event))
 {
   Close (true);
+}
+
+void MainFrame::handleCheckBox (wxCommandEvent& event)
+{
+  wxCheckBox *cb = (wxCheckBox*)event.GetEventObject();
+  unsigned int driverNumber = std::stoul (cb->GetName().ToStdString ());
+  std::cout << driverNumber << " " << cb->GetLabel () << ": " << event.GetInt () << std::endl;
+
+  for (std::vector<Driver>::iterator it = m_driverVector.begin (); it != m_driverVector.end (); ++it)
+  {
+    if ((*it).number () == driverNumber)
+    {
+      (*it).showGraph(cb->GetValue ());
+      break;
+    }
+  }
+  drawGraph ();
 }

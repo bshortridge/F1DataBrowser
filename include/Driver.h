@@ -26,6 +26,9 @@ public:
   
   void lap (Lap lap);
   Lap lap (unsigned int lapNumber);
+
+  void showGraph (bool show);
+  bool showGraph ();
   
   std::string toString ();
   
@@ -38,6 +41,7 @@ private:
   unsigned char     m_driverNumber;
   std::string       m_driverName;
   std::vector<Lap>  m_laps;
+  bool              m_showGraph;
 };
 
 #endif /* DRIVER_H */

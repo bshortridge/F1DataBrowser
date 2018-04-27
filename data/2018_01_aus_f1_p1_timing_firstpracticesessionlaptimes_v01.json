@@ -330,7 +330,7 @@
     },
     {
       "driverNumber" : 20,
-      "driverName" : "Kevin MAGNUSSEN",
+      "driverName" : "The Viking",
       "laps" : [
         { "lapNo" : 1, "lapNotes" : "P", "lapTime" : "12:01:36" },
         { "lapNo" : 2, "lapNotes" : "P", "lapTime" : "30:45.015" },

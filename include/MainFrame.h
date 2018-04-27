@@ -15,27 +15,34 @@
 #endif
 
 #include <wx/bookctrl.h>
+#include "Driver.h"
 
-#include "gnuplot_i.hpp"
+class Gnuplot;
 
 class MainFrame : public wxFrame
 {
 public:
   MainFrame (const wxString &title, const wxPoint &pos, const wxSize &size);
+  ~MainFrame ();
   
 private:
   void LoadFile   (wxCommandEvent& event);
   void CloseFile  (wxCommandEvent& event);
   void Quit       (wxCommandEvent& event);
-  Gnuplot *g1;
+  void handleCheckBox (wxCommandEvent& event);
+  
+  void drawGraph ();
   
   wxMenuBar     *m_MainMenu;
   wxBookCtrl    *m_Book;
   wxTextCtrl    *m_JSONdisplayBox;
   wxPanel       *m_GraphControlPanel;
+  Gnuplot       *g1;
   
   wxString    m_LastDirectory;
   wxString    m_CurrentDocPath;
+  
+  std::vector<Driver> m_driverVector;
   
   wxDECLARE_EVENT_TABLE ();
 };

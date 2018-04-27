@@ -39,6 +39,18 @@
       <itemPath>Makefile.mk</itemPath>
       <itemPath>./README.md</itemPath>
     </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile.mk</itemPath>
+      <itemPath>./README.md</itemPath>
+    </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile.mk</projectmakefile>
   <confs>
@@ -50,7 +62,7 @@
       </toolsSet>
       <compileType>
         <ccTool>
-          <standard>8</standard>
+          <standard>11</standard>
           <incDir>
             <pElem>/usr/include</pElem>
             <pElem>include</pElem>
@@ -61,7 +73,6 @@
           <linkerLibItems>
             <linkerLibLibItem>podofo</linkerLibLibItem>
             <linkerLibLibItem>jsoncpp</linkerLibLibItem>
-            <linkerLibFileItem>../wxcode-code/components/freechart/lib/libwxcode_gtk2u_freechart-3.0.so</linkerLibFileItem>
           </linkerLibItems>
           <commandLine>`wx-config --libs`</commandLine>
         </linkerTool>

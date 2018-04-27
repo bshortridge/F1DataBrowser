@@ -58,13 +58,11 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lpodofo -ljsoncpp ../wxcode-code/components/freechart/lib/libwxcode_gtk2u_freechart-3.0.so
+LDLIBSOPTIONS=-lpodofo -ljsoncpp
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser
-
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser: ../wxcode-code/components/freechart/lib/libwxcode_gtk2u_freechart-3.0.so
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -73,37 +71,37 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser: ${OBJECTFILES}
 ${OBJECTDIR}/src/Driver.o: src/Driver.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Driver.o src/Driver.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Driver.o src/Driver.cpp
 
 ${OBJECTDIR}/src/F1App.o: src/F1App.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/F1App.o src/F1App.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/F1App.o src/F1App.cpp
 
 ${OBJECTDIR}/src/JsonToDrivers.o: src/JsonToDrivers.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/JsonToDrivers.o src/JsonToDrivers.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/JsonToDrivers.o src/JsonToDrivers.cpp
 
 ${OBJECTDIR}/src/Lap.o: src/Lap.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Lap.o src/Lap.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Lap.o src/Lap.cpp
 
 ${OBJECTDIR}/src/LaptimesToJson.o: src/LaptimesToJson.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/LaptimesToJson.o src/LaptimesToJson.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/LaptimesToJson.o src/LaptimesToJson.cpp
 
 ${OBJECTDIR}/src/MainFrame.o: src/MainFrame.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/MainFrame.o src/MainFrame.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/MainFrame.o src/MainFrame.cpp
 
 ${OBJECTDIR}/src/main.o: src/main.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.cpp
+	$(COMPILE.cc) -g -I/usr/include -Iinclude -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.cpp
 
 # Subprojects
 .build-subprojects:
@@ -111,8 +109,6 @@ ${OBJECTDIR}/src/main.o: src/main.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} -r ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libwxcode_gtk2u_freechart-3.0.so
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/f1databrowser
 
 # Subprojects
 .clean-subprojects:

@@ -2046,9 +2046,10 @@ void Gnuplot::remove_tmpfiles()
 
             if( remove( tmpfile_list[i].c_str() ) != 0 )
             {
-                std::ostringstream except;
-                except << "Cannot remove temporary file \"" << tmpfile_list[i] << "\"";
-                throw GnuplotException(except.str());
+              continue;
+//                std::ostringstream except;
+//                except << "Cannot remove temporary file \"" << tmpfile_list[i] << "\"";
+//                throw GnuplotException(except.str());
             }
         }
 
