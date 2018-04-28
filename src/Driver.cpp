@@ -91,14 +91,26 @@ std::string Driver::stintAnalysis ()
   { // We ignore the 1st lap because we only have the start time
     Lap l = m_laps.at (i);
     unsigned long laptime = l.laptimeInMs ();
+//    if (laptime > slowestLap)
+//    {
+//      if (l.notes ().find ("P") == std::string::npos)
+//      {
+//        slowestLap = laptime;
+//      }
+//    }
+    if (laptime < fastestLap) { fastestLap = laptime; }
+  }
+  for (unsigned int i = 1; i < numLaps; i++)
+  { // We ignore the 1st lap because we only have the start time
+    Lap l = m_laps.at (i);
+    unsigned long laptime = l.laptimeInMs ();
     if (laptime > slowestLap)
     {
-      if (l.notes ().find ("P") == std::string::npos)
+      if (laptime < fastestLap * 1.1)
       {
         slowestLap = laptime;
       }
     }
-    if (laptime < fastestLap) { fastestLap = laptime; }
   }
   
   for (unsigned int i = 1; i < numLaps; i++)

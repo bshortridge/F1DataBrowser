@@ -160,8 +160,8 @@ void MainFrame::LoadFile (wxCommandEvent& WXUNUSED(event))
       for (std::vector<Driver>::iterator it = m_driverVector.begin (); it != m_driverVector.end (); ++it)
       {
         wxCheckBox *cb_driver = new wxCheckBox (m_GraphControlPanel, ID_Checkbox, (*it).name ());
-        cb_driver->SetValue (true);
-        (*it).showGraph (true);
+        cb_driver->SetValue (false);
+        (*it).showGraph (false);
         cb_driver->SetName (std::to_string ((*it).number ()));
         gs->Add ((wxControl *)cb_driver);
       }
@@ -169,7 +169,6 @@ void MainFrame::LoadFile (wxCommandEvent& WXUNUSED(event))
       m_GraphControlPanel->SetSizer (gs);
       drawGraph ();
     }
-    *g1 << "show plot";
   }
 }
 
